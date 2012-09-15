@@ -33,6 +33,8 @@ module Conditions
     #
     def check(object)
     
+      #puts "check : operator = #{operator} value = #{value} field = #{field} object = #{object.inspect} #{object.send(field)} #{object.send(field).class.name}"
+    
       case operator
         
         when '$eq'

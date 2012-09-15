@@ -23,14 +23,7 @@ module Conditions
     #
     def build_mongodb
     
-     result = case operator
-                 when '$and'
-                   temp = {}
-                   conditions.each { |condition| temp.merge!(condition.build_mongodb) }   
-                   temp                
-                 when '$or'                
-                   { '$or' => conditions.map { |condition| condition.build_mongodb } } 
-               end
+     { "#{operator}" => conditions.map { |condition| condition.build_mongodb } }
                
     end
     
