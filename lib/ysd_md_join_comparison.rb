@@ -108,9 +108,9 @@ module Conditions
         end
         
       end
-      
-      value
-      
+     
+      return value
+           
     end
     
     #
