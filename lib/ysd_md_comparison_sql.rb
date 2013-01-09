@@ -54,7 +54,11 @@ module Conditions
             
       result = case operator
                  when '$eq'
-                   ["#{field} = ?",value]
+                   if value.nil?
+                     ["#{field} is null"]
+                   else
+                     ["#{field} = ?",value]
+                   end
                  when '$in'
                    ["#{field} in (?)", Array(value).join(',')]
                  #when '$all'
