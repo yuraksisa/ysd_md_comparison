@@ -1,16 +1,4 @@
 module Conditions
-
-  #
-  # It builds the conditions for MongoDB 
-  #
-  class MongoDBConditionBuilder < Hash 
-  
-    def initialize(comparison)
-      @comparison = comparison
-      merge!(comparison.build_mongodb)
-    end
-
-  end
   
   #
   # It's a module which extends the JoinComparison class to generate the

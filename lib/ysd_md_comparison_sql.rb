@@ -1,16 +1,4 @@
 module Conditions
-
-  #
-  # It builds the conditions for SQL 
-  #
-  class SQLConditionBuilder < Hash 
-  
-    def initialize(comparison)
-      @comparison = comparison
-      merge!(comparison.build_mongodb)
-    end
-
-  end
   
   #
   # It's a module which extends the JoinComparison class to generate the
@@ -43,7 +31,7 @@ module Conditions
 
   #
   # It's a module which extends the SimpleComparison class to generate the
-  # conditions in MongoDB way
+  # conditions in SQL way
   #
   module SimpleComparisonSQLBuilder
     
@@ -60,7 +48,7 @@ module Conditions
                      ["#{field} = ?",value]
                    end
                  when '$in'
-                   ["#{field} in (?)", Array(value).join(',')]
+                   ["#{field} in ?", Array(value)] #Array(value).join(',')] #2013.02.29
                  #when '$all'
                  when '$lt'
                    ["#{field} < ?",value]                 
