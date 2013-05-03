@@ -7,14 +7,14 @@ module Conditions
   # conditions in SQL way
   #
   module JoinComparisonDataMapperBuilder  
-    
+
     #
     # Build conditions from a join comparison
     #
-    def build_datamapper(model)
+    def build_datamapper(model, opts={})
      
      conditions.inject(nil) do |result, item|
-       condition = item.build_datamapper(model)
+       condition = item.build_datamapper(model, opts)
        unless result.nil?
          condition = case operator
                       when '$or'
@@ -25,7 +25,25 @@ module Conditions
        end
        condition
      end
+
     end
+
+    def count_datamapper(model)
+
+     conditions.inject(nil) do |result, item|
+       condition = item.count_datamapper(model)
+       unless result.nil?
+         condition = case operator
+                      when '$or'
+                        result.union(condition)
+                      when '$and'
+                        result.intersection(condition)
+                     end
+       end
+       condition
+     end
+
+    end 
 
   end    
 
@@ -38,8 +56,25 @@ module Conditions
     #
     # Build conditions from a simple comparison
     #
-    def build_datamapper(model)
-     
+    def build_datamapper(model, opts={})
+           
+      # Directly through the model because the query loses default_scope
+
+      #DataMapper::Query.new(repository, model, :conditions => condition)
+      #repository.new_query(model, :conditions => condition)
+      
+      model.all(prepare_condition.merge(opts))
+
+    end
+
+    def count_datamapper(model)
+
+      model.count(prepare_condition)
+
+    end
+
+    def prepare_condition
+
       elements = field.to_s.split('.')
       
       condition = build_condition(elements.pop, operator, value)
@@ -49,12 +84,7 @@ module Conditions
         condition = elements[0..-3].reverse.inject({elements[-2] => elements[-1]}) { |result, item| {item.to_sym=>result} }
       end
       
-      # Directly through the model because the query loses default_scope
-
-      #DataMapper::Query.new(repository, model, :conditions => condition)
-      #repository.new_query(model, :conditions => condition)
-      
-      model.all(condition)
+      return condition
 
     end
         
@@ -66,6 +96,8 @@ module Conditions
       result = case operator
                  when '$eq'
                    {field.to_sym => value}
+                 when '$ne'
+                   {field.to_sym.send(:not) => value}
                  when '$in'
                    {field.to_sym => Array(value)}
                  #when '$all'

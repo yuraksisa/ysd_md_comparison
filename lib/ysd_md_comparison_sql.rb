@@ -47,6 +47,8 @@ module Conditions
                    else
                      ["#{field} = ?",value]
                    end
+                 when "$ne"
+                   ["#{field} <> ?", value]
                  when '$in'
                    ["#{field} in ?", Array(value)] #Array(value).join(',')] #2013.02.29
                  #when '$all'
