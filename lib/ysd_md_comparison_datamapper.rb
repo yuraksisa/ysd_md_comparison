@@ -28,23 +28,6 @@ module Conditions
 
     end
 
-    def count_datamapper(model)
-
-     conditions.inject(nil) do |result, item|
-       condition = item.count_datamapper(model)
-       unless result.nil?
-         condition = case operator
-                      when '$or'
-                        result.union(condition)
-                      when '$and'
-                        result.intersection(condition)
-                     end
-       end
-       condition
-     end
-
-    end 
-
   end    
 
   #
