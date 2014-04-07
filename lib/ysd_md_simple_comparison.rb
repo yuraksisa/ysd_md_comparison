@@ -94,7 +94,7 @@ module Conditions
     def self.operators
     
       ['$eq', '$ne', '$in', 
-       '$lt', '$gt', '$lte', '$gte']  
+       '$lt', '$gt', '$lte', '$gte', '$like']  
     
     end
   
